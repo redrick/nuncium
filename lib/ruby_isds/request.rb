@@ -11,20 +11,33 @@ module RubyIsds
     end
 
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def call
       uri = URI(full_url)
 
       request = Net::HTTP::Post.new(uri)
       default_headers.each { |k, v| request[k] = v }
       request.body = to_xml
-      request.basic_auth RubyIsds.configuration.username, RubyIsds.configuration.password
 
       https = Net::HTTP.new(uri.hostname, uri.port)
       https.use_ssl = true
       https.ssl_version = :TLSv1_2_client
+      if RubyIsds.configuration.cert_file
+        https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        https.cert = RubyIsds.configuration.cert_file
+        https.key = RubyIsds.configuration.private_key
+        https.verify_depth = 5
+        request.basic_auth(RubyIsds.configuration.data_box, '')
+      else
+        request.basic_auth(
+          RubyIsds.configuration.username,
+          RubyIsds.configuration.password
+        )
+      end
       response = https.request(request)
       call_reponse_wrapper(response)
     end
+    # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
     def call_reponse_wrapper(response)

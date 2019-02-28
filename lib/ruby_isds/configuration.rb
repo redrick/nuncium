@@ -1,6 +1,8 @@
 module RubyIsds
   class Configuration
-    attr_writer :data_box, :username, :password, :env, :api_url
+    attr_writer :data_box, :username, :password, :env, :api_url,
+                :cert_file, :key_file, :pass_phrase
+    attr_reader :pass_phrase
 
     ALLOWED_PRODUCTION_SYNTAX = [:production, 'production'].freeze
 
@@ -9,6 +11,9 @@ module RubyIsds
       @password = nil
       @data_box = nil
       @env = nil
+      @cert_file = nil
+      @key_file = nil
+      @pass_phrase = nil
     end
 
     def data_box
@@ -26,6 +31,25 @@ module RubyIsds
       @password
     end
 
+    def cert_file
+      if @cert_file && (!@key_file && !@pass_phrase)
+        raise ConfigNotSet, 'pass_phrase and key_file'
+      end
+      return unless @cert_file
+      OpenSSL::X509::Certificate.new(File.read(@cert_file))
+    end
+
+    def key_file
+      return nil unless @key_file
+      File.read(@key_file)
+    end
+
+    def private_key
+      raise ConfigNotSet, 'pass_phrase' if @key_file && !@pass_phrase
+      raise ConfigNotSet, 'key_file' if !@key_file && @pass_phrase
+      OpenSSL::PKey::RSA.new(File.read(@key_file), @pass_phrase)
+    end
+
     ##
     # env values:
     #   :development (default)
@@ -37,8 +61,13 @@ module RubyIsds
     end
 
     def api_domain
-      return 'https://ws1.mojedatovaschranka.cz' if production?
-      'https://ws1.czebox.cz'
+      if production?
+        return 'https://ws1c.mojedatovaschranka.cz/cert' if @cert_file
+        'https://ws1.mojedatovaschranka.cz'
+      else
+        return 'https://ws1c.czebox.cz/hspis' if @cert_file
+        'https://ws1.czebox.cz'
+      end
     end
 
     def xml_url
