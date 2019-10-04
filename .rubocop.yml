@@ -8,7 +8,7 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 89
+  Max: 98
 
 Style/Documentation:
   Enabled: false
