@@ -10,7 +10,7 @@ Style/FrozenStringLiteralComment:
 Metrics/LineLength:
   Max: 89
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
 Naming/VariableName:
@@ -20,4 +20,7 @@ Naming/UncommunicativeMethodParamName:
   Enabled: false
 
 Style/MultilineIfModifier:
+  Enabled: false
+
+Layout/EmptyLineAfterGuardClause:
   Enabled: false

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
-require 'ruby_isds'
+require 'nuncium'
 
 require 'pry'
 Pry.start

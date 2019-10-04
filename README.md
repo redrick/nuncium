@@ -1,6 +1,6 @@
 # Work in Progress
 
-# RubyIsds [![wercker status](https://app.wercker.com/status/04043d3ae16228db7dc8d9d3ae51d1e6/s/master "wercker status")](https://app.wercker.com/project/byKey/04043d3ae16228db7dc8d9d3ae51d1e6) [![Maintainability](https://api.codeclimate.com/v1/badges/eb20cde530fb8d1690cd/maintainability)](https://codeclimate.com/github/redrick/ruby_isds/maintainability)
+# Nuncium [![wercker status](https://app.wercker.com/status/04043d3ae16228db7dc8d9d3ae51d1e6/s/master "wercker status")](https://app.wercker.com/project/byKey/04043d3ae16228db7dc8d9d3ae51d1e6) [![Maintainability](https://api.codeclimate.com/v1/badges/eb20cde530fb8d1690cd/maintainability)](https://codeclimate.com/github/redrick/nuncium/maintainability)
 
 Wrapper for API love [ISDS](https://www.datoveschranky.info/) shares with us through this XML API.
 
@@ -9,7 +9,7 @@ Wrapper for API love [ISDS](https://www.datoveschranky.info/) shares with us thr
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'ruby_isds'
+gem 'nuncium'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install ruby_isds
+    $ gem install nuncium
 
 ## Usage
 
@@ -28,7 +28,7 @@ auth strategies:
 ### Username + password
 
 ```ruby
-RubyIsds.configure do |c|
+Nuncium.configure do |c|
   c.data_box = 'data_box_id'
   c.username = 'somebody'
   c.password = 'data_box_password'
@@ -38,7 +38,7 @@ end
 ### Server side system certificate
 
 ```ruby
-RubyIsds.configure do |c|
+Nuncium.configure do |c|
   c.data_box = 'data_box_id'
   c.cert_file = 'spec/factories/files/certifikat.pem'
   c.key_file = 'spec/factories/files/test-key.key'
@@ -53,20 +53,20 @@ you do not have to provide `env` in setup unless you go to production, gem
 defaults to `:development` anyway...
 
 This gem provides you with 2 basic classes and those are:
-- `RubyIsds::DataBox` (operations and manipulation around data box itself)
-- `RubyIsds::DataMessage` (operations and manipulation with message)
+- `Nuncium::DataBox` (operations and manipulation around data box itself)
+- `Nuncium::DataMessage` (operations and manipulation with message)
 
 Kinda important to mention is that results of calls are trying to be the same each time of course and in form of neat object that looks like this:
 
 ```ruby
-=> #<RubyIsds::WebServices::DbSearch::Response:0x00007fd3d44f0fd8
- @body=#<RubyIsds::Responses::Db::Body:0x00007fd3d449b808 @ciRecords=nil, @currentCredit="596400", @notifEmail=nil>,
+=> #<Nuncium::WebServices::DbSearch::Response:0x00007fd3d44f0fd8
+ @body=#<Nuncium::Responses::Db::Body:0x00007fd3d449b808 @ciRecords=nil, @currentCredit="596400", @notifEmail=nil>,
  @response=
   {"Envelope"=>
     {"xmlns:SOAP_ENV"=>"http://schemas.xmlsoap.org/soap/envelope/",
      "xmlns:xsd"=>"http://www.w3.org/2001/XMLSchema",
      "Body"=>{"DataBoxCreditInfoResponse"=>{"xmlns:p"=>"http://isds.czechpoint.cz/v20", "xmlns:xsi"=>"http://www.w3.org/2001/XMLSchema-instance", "currentCredit"=>"596400", "notifEmail"=>{"xsi:nil"=>"true"}, "ciRecords"=>nil, "dbStatus"=>{"dbStatusCode"=>"0000", "dbStatusMessage"=>"Provedeno úspěšně."}}}}},
- @status=#<RubyIsds::Responses::Db::Status:0x00007fd3d449be48 @code="0000", @message="Provedeno úspěšně.">>
+ @status=#<Nuncium::Responses::Db::Status:0x00007fd3d449be48 @code="0000", @message="Provedeno úspěšně.">>
 ```
 
 To take it apart consist of:
@@ -81,23 +81,23 @@ To take it apart consist of:
 
 Public API looks like so:
 
-### RubyIsds::DataBox
+### Nuncium::DataBox
 
 #### .check
 
 checking the status
 
 ```ruby
-> RubyIsds::DataBox.check
+> Nuncium::DataBox.check
 
-=> #<RubyIsds::WebServices::DbSearch::Response:0x00007fd3d68487d8
- @body=#<RubyIsds::Responses::Db::Body:0x00007fd3d41ad2e0 @dbState="1">,
+=> #<Nuncium::WebServices::DbSearch::Response:0x00007fd3d68487d8
+ @body=#<Nuncium::Responses::Db::Body:0x00007fd3d41ad2e0 @dbState="1">,
  @response=
   {"Envelope"=>
     {"xmlns:SOAP_ENV"=>"http://schemas.xmlsoap.org/soap/envelope/",
      "xmlns:xsd"=>"http://www.w3.org/2001/XMLSchema",
      "Body"=>{"CheckDataBoxResponse"=>{"xmlns:p"=>"http://isds.czechpoint.cz/v20", "xmlns:xsi"=>"http://www.w3.org/2001/XMLSchema-instance", "dbState"=>"1", "dbStatus"=>{"dbStatusCode"=>"0000", "dbStatusMessage"=>"Provedeno úspěšně."}}}}},
- @status=#<RubyIsds::Responses::Db::Status:0x00007fd3d41ae280 @code="0000", @message="Provedeno úspěšně.">>
+ @status=#<Nuncium::Responses::Db::Status:0x00007fd3d41ae280 @code="0000", @message="Provedeno úspěšně.">>
 ```
 
 
@@ -106,10 +106,10 @@ checking the status
 You can find any data box by searching like so:
 
 ```ruby
-> RubyIsds::DataBox.find_by(dbType: 'FO', pnLastName: 'Anta')
+> Nuncium::DataBox.find_by(dbType: 'FO', pnLastName: 'Anta')
 
-=> #<RubyIsds::WebServices::DbSearch::Response:0x00007f9986b4c090
- @body=#<RubyIsds::Responses::Db::Body:0x00007f9987823f98 @dbResults=false>,
+=> #<Nuncium::WebServices::DbSearch::Response:0x00007f9986b4c090
+ @body=#<Nuncium::Responses::Db::Body:0x00007f9987823f98 @dbResults=false>,
  @response=
   {"Envelope"=>
     {"xmlns:SOAP_ENV"=>"http://schemas.xmlsoap.org/soap/envelope/",
@@ -145,7 +145,7 @@ You can find any data box by searching like so:
              "dbEffectiveOVM"=>"false",
              "dbOpenAddressing"=>"true"}},
          "dbStatus"=>{"dbStatusCode"=>"0000", "dbStatusMessage"=>"Provedeno úspěšně."}}}}},
- @status=#<RubyIsds::Responses::Db::Status:0x00007f9987828c50 @code="0000", @message="Provedeno úspěšně.">>
+ @status=#<Nuncium::Responses::Db::Status:0x00007f9987828c50 @code="0000", @message="Provedeno úspěšně.">>
  ```
 
 #### .credit_info
@@ -153,16 +153,16 @@ You can find any data box by searching like so:
 For checking your balance (post messages need payments), so you can make sure you have enough before sending a message:
 
 ```ruby
-> RubyIsds::DataBox.credit_info
+> Nuncium::DataBox.credit_info
 
-=> #<RubyIsds::WebServices::DbSearch::Response:0x00007f8dd69b6e08
- @body=#<RubyIsds::Responses::Db::Body:0x00007f8dd699c1e8 @ciRecords=nil, @currentCredit="596400", @notifEmail=nil>,
+=> #<Nuncium::WebServices::DbSearch::Response:0x00007f8dd69b6e08
+ @body=#<Nuncium::Responses::Db::Body:0x00007f8dd699c1e8 @ciRecords=nil, @currentCredit="596400", @notifEmail=nil>,
  @response=
   {"Envelope"=>
     {"xmlns:SOAP_ENV"=>"http://schemas.xmlsoap.org/soap/envelope/",
      "xmlns:xsd"=>"http://www.w3.org/2001/XMLSchema",
      "Body"=>{"DataBoxCreditInfoResponse"=>{"xmlns:p"=>"http://isds.czechpoint.cz/v20", "xmlns:xsi"=>"http://www.w3.org/2001/XMLSchema-instance", "currentCredit"=>"596400", "notifEmail"=>{"xsi:nil"=>"true"}, "ciRecords"=>nil, "dbStatus"=>{"dbStatusCode"=>"0000", "dbStatusMessage"=>"Provedeno úspěšně."}}}}},
- @status=#<RubyIsds::Responses::Db::Status:0x00007f8dd699c3a0 @code="0000", @message="Provedeno úspěšně.">>
+ @status=#<Nuncium::Responses::Db::Status:0x00007f8dd699c3a0 @code="0000", @message="Provedeno úspěšně.">>
 ```
 
 #### .received
@@ -170,14 +170,14 @@ For checking your balance (post messages need payments), so you can make sure yo
 Listing all received messages:
 
 ```ruby
-> RubyIsds::DataBox.received
+> Nuncium::DataBox.received
 
-=> #<RubyIsds::Responses::Messages::Collection:0x00007f99882e6048
+=> #<Nuncium::Responses::Messages::Collection:0x00007f99882e6048
  @messages=
   [
   ...
   ],
- @status=#<RubyIsds::Responses::Dm::Status:0x00007f9986c26718 @code="0000", @message="Provedeno úspěšně.">>
+ @status=#<Nuncium::Responses::Dm::Status:0x00007f9986c26718 @code="0000", @message="Provedeno úspěšně.">>
 ```
 
 Message responses are stubbed here in response, will be explain down in DataMessage docs
@@ -188,14 +188,14 @@ Message responses are stubbed here in response, will be explain down in DataMess
 Listing all received messages:
 
 ```ruby
-> RubyIsds::DataBox.sent
+> Nuncium::DataBox.sent
 
-=> #<RubyIsds::Responses::Messages::Collection:0x00007f99882e6048
+=> #<Nuncium::Responses::Messages::Collection:0x00007f99882e6048
  @messages=
   [
   ...
   ],
- @status=#<RubyIsds::Responses::Dm::Status:0x00007f9986c26718 @code="0000", @message="Provedeno úspěšně.">>
+ @status=#<Nuncium::Responses::Dm::Status:0x00007f9986c26718 @code="0000", @message="Provedeno úspěšně.">>
 ```
 
 Message responses are stubbed here in response, will be explain down in DataMessage docs
@@ -204,7 +204,7 @@ Message responses are stubbed here in response, will be explain down in DataMess
 
 TODO
 
-### RubyIsds::DataMessage
+### Nuncium::DataMessage
 
 #### .find
 
@@ -257,7 +257,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ruby_isds. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/nuncium. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## TODO
 
@@ -278,4 +278,4 @@ Many thanks to Petr Písař <petr.pisar@atlas.cz> for writing awesome libisds C 
 
 ## Code of Conduct
 
-Everyone interacting in the RubyIsds project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/ruby_isds/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Nuncium project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/nuncium/blob/master/CODE_OF_CONDUCT.md).
