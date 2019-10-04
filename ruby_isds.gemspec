@@ -1,10 +1,10 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "ruby_isds/version"
+require "nuncium/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "ruby_isds"
-  spec.version       = RubyIsds::VERSION
+  spec.name          = "nuncium"
+  spec.version       = Nuncium::VERSION
   spec.authors       = ["Andrej Antas"]
   spec.email         = ["andrej@antas.cz"]
 
